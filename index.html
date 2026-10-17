@@ -21,13 +21,12 @@
         .show-ans{color:#2c6e91;cursor:pointer;font-weight:bold;}
         .tip{background:#fff8dc;padding:12px;border-radius:8px;margin:10px 0;}
         footer{margin-top:30px;text-align:center;color:#666;font-size:0.9rem;}
-
         /* ====== 矢量地图样式 ====== */
         #worldMapSvg{width:100%;height:auto;max-height:520px;cursor:pointer;}
         .continent{fill:#89b8d8;stroke:#2c6e91;stroke-width:0.6;transition:0.3s;}
         .continent:hover{fill:#2c6e91;}
 
-        /* 地图弹窗 */
+        /* 地图弹窗【修复响应式】 */
         .map-popup{
             position:absolute;
             background:#fff;
@@ -35,6 +34,8 @@
             border-radius:10px;
             padding:16px;
             max-width:360px;
+            max-height:75vh;
+            overflow-y:auto;
             box-shadow:0 4px 16px #00000025;
             z-index:99;
             display:none;
@@ -42,7 +43,20 @@
         .map-popup h3{color:#2c6e91;margin-bottom:8px;}
         .close-pop{margin-top:8px;cursor:pointer;color:#d03030;font-weight:bold;}
         .map-popup img{max-width:100%;border-radius:6px;margin:8px 0;}
-        .map-popup video{max-width:100%;border-radius:6px;margin:8px 0;}
+        .map-popup iframe{width:100%;border-radius:6px;margin:8px 0;}
+
+        /* 手机端媒体查询 */
+        @media (max-width:768px) {
+            .map-popup{
+                position:fixed !important;
+                left:5vw !important;
+                right:5vw !important;
+                bottom:16px !important;
+                top:auto !important;
+                max-width:90vw !important;
+                max-height:60vh !important;
+            }
+        }
 
         /* ========== 资源库新增样式 ========== */
         .resource-tab{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
@@ -59,6 +73,7 @@
         }
         .preview-box{background:#fff;padding:20px;border-radius:10px;max-width:90%;max-height:90%;overflow:auto;}
         .preview-box img{max-width:100%;}
+        .preview-box iframe{width:100%;}
         .close-preview{margin-top:12px;padding:6px 12px;background:#2c6e91;color:white;border:none;border-radius:6px;cursor:pointer;}
     </style>
 </head>
@@ -68,7 +83,6 @@
         <h1>世界地理 · 交互式教学平台</h1>
         <p>章节知识点展示 · 交互式矢量地图 · 资源库 · 课堂互动 · 随堂练习</p>
     </header>
-
     <!-- 导航：移除扩展板块按钮 -->
     <div class="nav">
         <button onclick="switchPage('mapPage')">🌍交互式世界地图</button>
@@ -76,7 +90,6 @@
         <button onclick="switchPage('resourceLib')">📚资源库</button>
         <button onclick="switchPage('quiz')">随堂练习</button>
     </div>
-
     <!-- ========== 矢量地图页面 ========== -->
     <div id="mapPage" class="page">
         <div class="card">
@@ -85,19 +98,19 @@
             <div style="position:relative;">
                 <svg id="worldMapSvg" viewBox="0 0 1000 450">
                     <!-- 亚洲 -->
-                    <path class="continent" data-name="亚洲" d="M640,120 L840,100 L860,240 L760,340 L620,300 L580,200 Z"/>
+                    <path class="continent" data-name="亚洲" d="M640,120 L840,100 L860,240 L760,340 L620,300 L580,200 Z" />
                     <!-- 非洲 -->
-                    <path class="continent" data-name="非洲" d="M420,180 L520,170 L540,340 L460,410 L380,340 L400,200 Z"/>
+                    <path class="continent" data-name="非洲" d="M420,180 L520,170 L540,340 L460,410 L380,340 L400,200 Z" />
                     <!-- 欧洲 -->
-                    <path class="continent" data-name="欧洲" d="M440,100 L560,90 L540,170 L430,180 L410,120 Z"/>
+                    <path class="continent" data-name="欧洲" d="M440,100 L560,90 L540,170 L430,180 L410,120 Z" />
                     <!-- 北美洲 -->
-                    <path class="continent" data-name="北美洲" d="M80,100 L240,80 L260,220 L180,300 L60,240 Z"/>
+                    <path class="continent" data-name="北美洲" d="M80,100 L240,80 L260,220 L180,300 L60,240 Z" />
                     <!-- 南美洲 -->
-                    <path class="continent" data-name="南美洲" d="M140,300 L220,280 L240,400 L180,440 L100,380 Z"/>
+                    <path class="continent" data-name="南美洲" d="M140,300 L220,280 L240,400 L180,440 L100,380 Z" />
                     <!-- 大洋洲 -->
-                    <path class="continent" data-name="大洋洲" d="M740,360 L820,350 L830,410 L750,430 L720,390 Z"/>
+                    <path class="continent" data-name="大洋洲" d="M740,360 L820,350 L830,410 L750,430 L720,390 Z" />
                     <!-- 南极洲 -->
-                    <path class="continent" data-name="南极洲" d="M20,430 L980,430 L980,445 L20,445 Z"/>
+                    <path class="continent" data-name="南极洲" d="M20,430 L980,430 L980,445 L20,445 Z" />
                 </svg>
                 <div class="map-popup" id="mapPopup">
                     <h3 id="popTitle"></h3>
@@ -107,7 +120,6 @@
             </div>
         </div>
     </div>
-
     <!-- ========== 资源库页面 ========== -->
     <div id="resourceLib" class="page hidden">
         <div class="card">
@@ -123,7 +135,6 @@
             </div>
         </div>
     </div>
-
     <!-- 知识点板块 -->
     <div id="knowledge" class="page hidden">
         <div class="card">
@@ -139,7 +150,6 @@
             <p>人口、人种、语言、宗教、聚落、经济发展差异。</p>
         </div>
     </div>
-
     <!-- 习题板块 -->
     <div id="quiz" class="page hidden">
         <div class="card">
@@ -156,7 +166,6 @@
             </div>
         </div>
     </div>
-
     <!-- 资源预览弹窗 -->
     <div class="resource-preview" id="resourcePreview">
         <div class="preview-box">
@@ -164,10 +173,8 @@
             <button class="close-preview" onclick="closeResourcePreview()">关闭预览</button>
         </div>
     </div>
-
     <footer>世界地理交互式教学网页 | 本地网页，可部署至网络生成在线网址</footer>
 </div>
-
 <script>
 //页面切换
 function switchPage(id){
@@ -175,61 +182,51 @@ function switchPage(id){
     document.getElementById(id).classList.remove('hidden');
     hidePopup();
 }
-
 // ===================== 大洲知识点数据【重点！这里预留图片/视频通道】 =====================
 const continentData = {
 "亚洲":`<p><b>地形：</b>中部高四周低，高原山地为主。</p>
 <p><b>气候：</b>气候复杂多样，季风气候显著，大陆性分布广。</p>
 <img src="assets/topographic map of Asia.jpg" alt="亚洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=1052076332&bvid=BV1H4y1p78V&cid=1481907965&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=1052076332&bvid=BV1H4y1p78V&cid=1481907965&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>人口最大大洲；东亚、东南亚、南亚人口稠密。</p>
 <p><b>重难点：</b>亚欧大陆季风成因、青藏高原影响。</p>`,
-
 "非洲":`<p><b>地形：</b>高原大陆，东南高西北低。</p>
 <p><b>气候：</b>以赤道为轴，南北对称分布，热带面积最大。</p>
 <img src="assets/Topographic map of Africa.jpg" alt="非洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=117331359439588&bvid=BV1GWh26EJ&cid=42192602126&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=117331359439588&bvid=BV1GWh26EJ&cid=42192602126&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>黑色人种主要分布区，经济多为发展中国家。</p>
 <p><b>重难点：</b>撒哈拉沙漠、刚果盆地、东非大裂谷。</p>`,
-
 "欧洲":`<p><b>地形：</b>平原为主，平均海拔最低大洲。</p>
 <p><b>气候：</b>温带海洋性气候典型，全年温和湿润。</p>
-<img src="assets/Topographic map of Africa.jpg" alt="欧洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=784552316&bvid=BV1614y1Q7Mo&cid=1156009857&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<img src="assets/Topographic map of Europe.jpg" alt="欧洲地形图">
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=784552316&bvid=BV1614y1Q7Mo&cid=1156009857&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>发达国家集中，人口自然增长率低。</p>
 <p><b>重难点：</b>温带海洋性气候成因。</p>`,
-
 "北美洲":`<p><b>地形：</b>三大地形区，西山地、中平原、东低山高原。</p>
 <p><b>气候：</b>温带大陆性气候为主。</p>
 <img src="assets/Topographic map of North America.jpg" alt="北美洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=88785665&bvid=BV1P7411G72R&cid=151671081&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=88785665&bvid=BV1P7411G72R&cid=151671081&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>移民大陆，美国、加拿大为发达国家。</p>
 <p><b>重难点：</b>地形对气候的阻挡作用。</p>`,
-
 "南美洲":`<p><b>地形：</b>西安第斯山脉，东平原高原相间分布。</p>
 <p><b>气候：</b>热带雨林气候面积最大。</p>
 <img src="assets/Topographic map of Sorth America.jpg" alt="南美洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=99900862&bvid=BV1G7411Q7A6&cid=170466062&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=99900862&bvid=BV1G7411Q7A6&cid=170466062&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>混血人种多，巴西为代表国家。</p>
 <p><b>重难点：</b>亚马孙雨林生态意义。</p>`,
-
 "大洋洲":`<p><b>地形：</b>澳大利亚东西高中部低。</p>
 <p><b>气候：</b>半环状分布，中部热带沙漠广布。</p>
 <img src="assets/Topographic map of Oceania.jpg" alt="大洋洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=1173314267668&bvid=BV1Yrh26SEN&cid=42192997133&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=1173314267668&bvid=BV1Yrh26SEN&cid=42192997133&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>地广人稀，澳大利亚发达国家。</p>
 <p><b>重难点：</b>澳大利亚特有生物成因。</p>`,
-
 "南极洲":`<p><b>地形：</b>平均海拔最高大陆，冰层厚，被称为“冰雪高原”。</p>
 <p><b>气候：</b>酷寒、干燥、烈风，世界寒极。</p>
 <img src="assets/Topographic map of Antarctica.jpg" alt="南极洲地形图">
-<iframe width="100%" height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=1462740302&bvid=BV1iY4y1k7nL&cid=465072440&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
+<iframe height="220" src="https://player.bilibili.com/player.html?isOutside=true&aid=1462740302&bvid=BV1iY4y1k7nL&cid=465072440&p=1" scrolling="no" border="0" frameborder="0" framespacing="0" allowfullscreen></iframe>
 <p><b>人文：</b>无常住人口，多国建立科考站。</p>
 <p><b>重难点：</b>南极环境保护、极地科考意义。</p>`
 };
-
-
-
 //地图弹窗
 const popup = document.getElementById('mapPopup');
 const popTitle = document.getElementById('popTitle');
@@ -240,17 +237,21 @@ document.querySelectorAll('.continent').forEach(ele=>{
         const name = this.dataset.name;
         popTitle.innerText = name;
         popContent.innerHTML = continentData[name];
-        const x = e.pageX - svgWrap.getBoundingClientRect().left;
-        const y = e.pageY - svgWrap.getBoundingClientRect().top;
-        popup.style.left = (x + 15)+'px';
-        popup.style.top = (y + 15)+'px';
+        //判断是否手机
+        const isMobile = window.matchMedia("(max-width:768px)").matches;
+        if(!isMobile){
+            //桌面端跟随鼠标
+            const x = e.pageX - svgWrap.getBoundingClientRect().left;
+            const y = e.pageY - svgWrap.getBoundingClientRect().top;
+            popup.style.left = (x + 15)+'px';
+            popup.style.top = (y + 15)+'px';
+        }
         popup.style.display = 'block';
     })
 })
 function hidePopup(){
     popup.style.display = 'none';
 }
-
 // ====================== 资源库JS代码 ======================
 // 资源数据，在这里新增资源
 const resourceList = [
@@ -272,9 +273,7 @@ type:"video",
 desc:"板块构造学说动画演示",
 url:"https://player.bilibili.com/player.html?isOutside=true&aid=944935177&bvid=BV16W4y147s&cid=884824079&p=1"
 }
-
 ];
-
 let currentFilter = "all";
 //渲染资源列表
 function renderResource(){
@@ -307,7 +306,7 @@ function openResourcePreview(item){
     if(item.type === "image"){
         content.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p><img src="${item.url}" alt="${item.title}">`;
     }else if(item.type === "video"){
-        content.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p><iframe src="${item.url}" width="720" height="400" frameborder="0" allowfullscreen></iframe>`;
+        content.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p><iframe src="${item.url}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
     }
     preview.style.display = "flex";
 }
@@ -319,4 +318,3 @@ renderResource();
 </script>
 </body>
 </html>
-
