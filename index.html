@@ -3,360 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>世界地理 交互式教学课堂</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        geo: {
-                            primary: '#165DFF',
-                            land: '#4CAF50',
-                            ocean: '#0288D1',
-                            desert: '#F57C00',
-                            polar: '#90CAF9'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto { content-visibility: auto; }
-            .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-            .map-region { transition: all 0.3s ease; cursor: pointer; }
-            .map-region:hover { transform: scale(1.03); }
-        }
-    </style>
-</head>
-<body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-<!-- 顶部导航 -->
-<header class="sticky top-0 z-40 bg-white dark:bg-slate-800 card-shadow px-4 py-3">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-bold text-geo-primary dark:text-blue-400">
-            <i class="fa fa-globe mr-2"></i>世界地理交互式教学平台
-        </h1>
-        <div class="flex gap-4 items-center">
-            <button id="btn-theme" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-700">
-                <i class="fa fa-moon-o dark:hidden"></i>
-                <i class="fa fa-sun-o hidden dark:inline"></i>
-                <span class="ml-1 text-sm">主题</span>
-            </button>
-            <button id="btn-collect" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-700">
-                <i class="fa fa-star text-amber-500"></i> 收藏知识点
-            </button>
-        </div>
-    </div>
-</header>
-
-<div class="max-w-7xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 mt-4">
-    <!-- 左侧目录栏 -->
-    <aside class="lg:col-span-3 bg-white dark:bg-slate-800 rounded-xl p-4 card-shadow h-fit sticky top-20">
-        <h2 class="font-bold text-lg mb-3 pb-2 border-b dark:border-slate-700">📖 章节目录</h2>
-        <ul class="space-y-2 text-sm" id="chapter-list">
-            <li class="chapter-item p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer" data-id="ch1">1. 世界海陆分布</li>
-            <li class="chapter-item p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer" data-id="ch2">2. 世界气候类型</li>
-            <li class="chapter-item p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer" data-id="ch3">3. 大洲与分区地理</li>
-            <li class="chapter-item p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer" data-id="ch4">4. 世界洋流</li>
-            <li class="chapter-item p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer" data-id="ch5">5. 世界居民与人文地理</li>
-            <li class="chapter-item p-2 rounded hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer" data-id="quiz">📝 随堂练习</li>
-        </ul>
-    </aside>
-
-    <!-- 主内容区 -->
-    <main class="lg:col-span-9">
-        <!-- 世界地图交互区域 -->
-        <section class="bg-white dark:bg-slate-800 rounded-xl p-5 card-shadow mb-4">
-            <h2 class="text-lg font-bold mb-3">🌍 交互式区域点击</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="map-region bg-geo-land text-white p-4 rounded-lg text-center" data-target="asia">亚洲</div>
-                <div class="map-region bg-geo-land text-white p-4 rounded-lg text-center" data-target="europe">欧洲</div>
-                <div class="map-region bg-geo-land text-white p-4 rounded-lg text-center" data-target="africa">非洲</div>
-                <div class="map-region bg-geo-land text-white p-4 rounded-lg text-center" data-target="america">美洲</div>
-                <div class="map-region bg-geo-land text-white p-4 rounded-lg text-center" data-target="oceania">大洋洲</div>
-                <div class="map-region bg-geo-polar text-white p-4 rounded-lg text-center" data-target="antarctica">南极洲</div>
-                <div class="map-region bg-geo-ocean text-white p-4 rounded-lg text-center" data-target="ocean">四大洋</div>
-                <div class="map-region bg-geo-desert text-white p-4 rounded-lg text-center" data-target="climate">气候区</div>
-            </div>
-        </section>
-
-        <!-- 知识点展示面板 -->
-        <section id="content-panel" class="bg-white dark:bg-slate-800 rounded-xl p-5 card-shadow mb-4">
-            <div id="content-body">
-                <h2 class="text-xl font-bold mb-3">欢迎使用世界地理交互式教学系统</h2>
-                <p class="text-slate-600 dark:text-slate-300">
-                    左侧选择章节，或者点击上方大洲卡片查看对应知识点。<br/>
-                    支持：知识点弹窗、收藏重点、随堂习题、深色模式。适用于课堂教学、自主复习。
-                </p>
-                <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                    <b>本章学习目标：</b>掌握世界海陆格局、气候分布、大洲自然人文特征，建立空间地理思维。
-                </div>
-            </div>
-        </section>
-
-        <!-- 随堂练习面板 -->
-        <section id="quiz-panel" class="bg-white dark:bg-slate-800 rounded-xl p-5 card-shadow hidden">
-            <h2 class="text-xl font-bold mb-4">📝 世界地理随堂检测</h2>
-            <div id="quiz-container"></div>
-            <div class="mt-4">
-                <button id="check-answer" class="bg-geo-primary text-white px-4 py-2 rounded-lg">提交答案</button>
-                <span id="quiz-result" class="ml-3 font-semibold"></span>
-            </div>
-        </section>
-    </main>
-</div>
-
-<!-- 弹窗组件 -->
-<div id="modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-800 rounded-xl max-w-xl w-full max-h-[80vh] overflow-auto p-5 card-shadow">
-        <div class="flex justify-between items-center mb-3">
-            <h3 id="modal-title" class="font-bold text-lg"></h3>
-            <button id="modal-close" class="text-xl">&times;</button>
-        </div>
-        <div id="modal-body" class="text-slate-700 dark:text-slate-300"></div>
-        <div class="mt-4 text-right">
-            <button id="modal-collect" class="text-amber-500"><i class="fa fa-star-o"></i> 收藏本知识点</button>
-        </div>
-    </div>
-</div>
-
-<script>
-// 知识点库
-const knowledgeBase = {
-    asia: {
-        title: "亚洲",
-        content: `
-            <p><strong>地理位置：</strong>世界面积最大大洲，跨寒温热三带。</p>
-            <p><strong>地形：</strong>中部高四周低，高原山地为主；青藏高原、喜马拉雅山脉。</p>
-            <p><strong>气候：</strong>季风气候显著（热带、亚热带、温带季风），大陆性气候分布广。</p>
-            <p><strong>人文：</strong>人口最多；东亚、东南亚、南亚人口稠密。</p>
-            <p><strong>重点考点：</strong>河流呈放射状分布原因。</p>`
-    },
-    europe: {
-        title: "欧洲",
-        content: `
-            <p><strong>地形：</strong>平原为主，阿尔卑斯山。</p>
-            <p><strong>气候：</strong>温带海洋性气候典型，全年温和湿润。</p>
-            <p><strong>人文：</strong>发达国家集中，人口自然增长率低。</p>`
-    },
-    africa: {
-        title: "非洲",
-        content: `
-            <p><strong>地形：</strong>高原大陆；东非大裂谷。</p>
-            <p><strong>气候：</strong>以赤道为轴，南北对称分布，热带大陆。</p>
-            <p><strong>资源：</strong>矿产丰富；人口增长最快大洲。</p>`
-    },
-    america: {
-        title: "美洲",
-        content: `
-            <p>北美洲：三大地形区，西山地、中平原、东低山；温带大陆性广。</p>
-            <p>南美洲：亚马孙平原（热带雨林）、巴西高原；安第斯山。</p>`
-    },
-    oceania: {
-        title: "大洋洲",
-        content: `
-            <p>澳大利亚：独占一块大陆；地形东西高中部低；特有生物。</p>`
-    },
-    antarctica: {
-        title: "南极洲",
-        content: `
-            <p>冰雪大陆、酷寒干燥烈风；纬度最高；科考站。</p>`
-    },
-    ocean: {
-        title: "四大洋",
-        content: `
-            <p>太平洋（最大）>大西洋>印度洋>北冰洋（最小纬度最高）。</p>`
-    },
-    climate: {
-        title: "世界气候类型",
-        content: `
-            <ul class="list-disc pl-5">
-                <li>热带雨林：全年高温多雨（赤道附近）</li>
-                <li>热带草原：全年高温，分干湿两季</li>
-                <li>热带季风：全年高温，分旱雨两季</li>
-                <li>热带沙漠：全年炎热干燥</li>
-                <li>亚热带季风：夏季高温多雨冬季温和少雨</li>
-                <li>地中海气候：夏干冬雨</li>
-                <li>温带海洋：全年温和湿润</li>
-                <li>温带大陆：冬冷夏热，年较差大</li>
-            </ul>`
-    },
-    ch1: {
-        title: "1.世界海陆分布",
-        content: `
-            <p>七分海洋三分陆地；陆地集中北半球，但北极是海洋；海洋集中南半球，南极是陆地。</p>
-            <p>大陆、岛屿、半岛概念；七大洲四大洋分界线。</p>
-            <p>考点：亚欧、亚非、南北美洲分界线。</p>`
-    },
-    ch2: {
-        title: "2.世界气候类型",
-        content: `
-            <p>影响因素：纬度、海陆、地形。气温由低纬向高纬递减；降水分布规律。</p>
-            <p>气候直方图判读方法。`
-    },
-    ch3: {
-        title: "3.大洲与分区地理",
-        content: `
-            <p>各大洲地形、气候、河流、人文综合对比，是区域地理核心。</p>`
-    },
-    ch4: {
-        title: "4.世界洋流",
-        content: `
-            <p>洋流分类：暖流、寒流。影响：气候、渔场、航运、污染物扩散。</p>
-            <p>四大渔场成因。`
-    },
-    ch5: {
-        title: "5.世界居民与人文地理",
-        content: `
-            <p>人口分布稠密区：亚洲东部南部、欧洲西部、北美东部。</p>
-            <p>三大人种、语言、宗教；聚落（城市乡村）。`
-    }
-};
-
-// 习题数据
-const quizData = [
-    {
-        q: "世界上面积最大的大洲是？",
-        options: ["非洲", "亚洲", "欧洲", "北美洲"],
-        ans: 1
-    },
-    {
-        q: "地中海气候的降水特征是？",
-        options: ["全年多雨", "夏季多雨", "冬季多雨", "全年少雨"],
-        ans: 2
-    },
-    {
-        q: "亚非两洲分界线是？",
-        options: ["巴拿马运河", "苏伊士运河", "白令海峡", "乌拉尔山"],
-        ans: 1
-    }
-];
-
-// 收藏本地存储
-let collectList = JSON.parse(localStorage.getItem("geoCollect")) || [];
-
-// DOM元素
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modal-title");
-const modalBody = document.getElementById("modal-body");
-const modalClose = document.getElementById("modal-close");
-const modalCollectBtn = document.getElementById("modal-collect");
-const btnTheme = document.getElementById("btn-theme");
-const btnCollect = document.getElementById("btn-collect");
-const contentPanel = document.getElementById("content-panel");
-const contentBody = document.getElementById("content-body");
-const quizPanel = document.getElementById("quiz-panel");
-const quizContainer = document.getElementById("quiz-container");
-const checkAnswerBtn = document.getElementById("check-answer");
-const quizResult = document.getElementById("quiz-result");
-
-// 打开弹窗
-function openModal(key) {
-    const data = knowledgeBase[key];
-    modalTitle.innerText = data.title;
-    modalBody.innerHTML = data.content;
-    modal.classList.remove("hidden");
-    modal.dataset.currentKey = key;
-    updateCollectIcon(key);
-}
-// 关闭弹窗
-modalClose.onclick = ()=> modal.classList.add("hidden");
-modal.onclick = (e)=> { if(e.target === modal) modal.classList.add("hidden"); }
-
-// 更新收藏图标
-function updateCollectIcon(key){
-    const star = modalCollectBtn.querySelector("i");
-    if(collectList.includes(key)){
-        star.className = "fa fa-star";
-    }else{
-        star.className = "fa fa-star-o";
-    }
-}
-// 收藏切换
-modalCollectBtn.onclick = ()=>{
-    const key = modal.dataset.currentKey;
-    const idx = collectList.indexOf(key);
-    if(idx > -1) collectList.splice(idx,1);
-    else collectList.push(key);
-    localStorage.setItem("geoCollect", JSON.stringify(collectList));
-    updateCollectIcon(key);
-}
-// 查看收藏列表
-btnCollect.onclick = ()=>{
-    if(collectList.length ===0){
-        alert("暂无收藏知识点！点击知识点弹窗内星星收藏");
-        return;
-    }
-    let text = "已收藏：\n";
-    collectList.forEach(k=> text += knowledgeBase[k].title + "\n");
-    alert(text);
-}
-
-// 章节点击
-document.querySelectorAll(".chapter-item").forEach(item=>{
-    item.onclick = ()=>{
-        const id = item.dataset.id;
-        quizPanel.classList.add("hidden");
-        contentPanel.classList.remove("hidden");
-        if(id === "quiz"){
-            contentPanel.classList.add("hidden");
-            quizPanel.classList.remove("hidden");
-            renderQuiz();
-            return;
-        }
-        const data = knowledgeBase[id];
-        contentBody.innerHTML = `
-            <h2 class="text-xl font-bold mb-3">${data.title}</h2>
-            <div class="text-slate-700 dark:text-slate-300">${data.content}</div>
-        `;
-    }
-})
-
-// 大洲卡片点击
-document.querySelectorAll(".map-region").forEach(card=>{
-    card.onclick = ()=> openModal(card.dataset.target);
-})
-
-// 渲染习题
-function renderQuiz(){
-    quizContainer.innerHTML = "";
-    quizData.forEach((item, idx)=>{
-        let html = `<div class="mb-5"><p class="font-medium">${idx+1}. ${item.q}</p><div class="ml-3 mt-2 space-y-1">`;
-        item.options.forEach((opt, oidx)=>{
-            html += `<label class="block"><input type="radio" name="q${idx}" value="${oidx}" class="mr-2">${opt}</label>`;
-        })
-        html += "</div></div>";
-        quizContainer.innerHTML += html;
-    })
-    quizResult.innerText = "";
-}
-// 批改答案
-checkAnswerBtn.onclick = ()=>{
-    let score = 0;
-    quizData.forEach((item, idx)=>{
-        const sel = document.querySelector(`input[name="q${idx}"]:checked`);
-        if(sel && Number(sel.value) === item.ans) score++;
-    })
-    quizResult.innerText = `得分：${score}/${quizData.length}`;
-}
-
-// 深色浅色切换
-btnTheme.onclick = ()=>{
-    document.documentElement.classList.toggle("dark");
-}
-</script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>世界地理交互式教学网页</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",sans-serif;}
@@ -375,23 +21,111 @@ btnTheme.onclick = ()=>{
         .show-ans{color:#2c6e91;cursor:pointer;font-weight:bold;}
         .tip{background:#fff8dc;padding:12px;border-radius:8px;margin:10px 0;}
         footer{margin-top:30px;text-align:center;color:#666;font-size:0.9rem;}
+
+        /* ====== 矢量地图样式 ====== */
+        #worldMapSvg{width:100%;height:auto;max-height:520px;cursor:pointer;}
+        .continent{fill:#89b8d8;stroke:#2c6e91;stroke-width:0.6;transition:0.3s;}
+        .continent:hover{fill:#2c6e91;}
+
+        /* 地图弹窗 */
+        .map-popup{
+            position:absolute;
+            background:#fff;
+            border:2px solid #2c6e91;
+            border-radius:10px;
+            padding:16px;
+            max-width:360px;
+            box-shadow:0 4px 16px #00000025;
+            z-index:99;
+            display:none;
+        }
+        .map-popup h3{color:#2c6e91;margin-bottom:8px;}
+        .close-pop{margin-top:8px;cursor:pointer;color:#d03030;font-weight:bold;}
+        .map-popup img{max-width:100%;border-radius:6px;margin:8px 0;}
+        .map-popup video{max-width:100%;border-radius:6px;margin:8px 0;}
+
+        /* ========== 资源库新增样式 ========== */
+        .resource-tab{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+        .resource-tab button{padding:8px 14px;border:none;border-radius:6px;background:#e0edf4;color:#2c6e91;cursor:pointer;}
+        .resource-tab button.active{background:#2c6e91;color:#fff;}
+        .resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+        .resource-item{border:1px solid #d8e7ef;border-radius:8px;padding:12px;cursor:pointer;transition:0.2s;}
+        .resource-item:hover{box-shadow:0 2px 8px #00000018;}
+        .resource-item h4{margin:6px 0;color:#2c6e91;}
+        .resource-preview{
+            position:fixed;
+            top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);
+            z-index:200;display:none;align-items:center;justify-content:center;padding:20px;
+        }
+        .preview-box{background:#fff;padding:20px;border-radius:10px;max-width:90%;max-height:90%;overflow:auto;}
+        .preview-box img{max-width:100%;}
+        .close-preview{margin-top:12px;padding:6px 12px;background:#2c6e91;color:white;border:none;border-radius:6px;cursor:pointer;}
     </style>
 </head>
 <body>
 <div class="container">
     <header>
         <h1>世界地理 · 交互式教学平台</h1>
-        <p>章节知识点展示 · 课堂互动 · 随堂练习</p>
+        <p>章节知识点展示 · 交互式矢量地图 · 资源库 · 课堂互动 · 随堂练习</p>
     </header>
 
+    <!-- 导航：移除扩展板块按钮 -->
     <div class="nav">
+        <button onclick="switchPage('mapPage')">🌍交互式世界地图</button>
         <button onclick="switchPage('knowledge')">知识点学习</button>
+        <button onclick="switchPage('resourceLib')">📚资源库</button>
         <button onclick="switchPage('quiz')">随堂练习</button>
-        <button onclick="switchPage('extend')">🔧扩展升级预览</button>
+    </div>
+
+    <!-- ========== 矢量地图页面 ========== -->
+    <div id="mapPage" class="page">
+        <div class="card">
+            <h2>交互式矢量世界地图（点击大洲查看知识点）</h2>
+            <p class="tip">鼠标悬浮大洲高亮，点击大洲弹出该大洲地理重难点，弹窗内可插入图片/视频</p>
+            <div style="position:relative;">
+                <svg id="worldMapSvg" viewBox="0 0 1000 450">
+                    <!-- 亚洲 -->
+                    <path class="continent" data-name="亚洲" d="M640,120 L840,100 L860,240 L760,340 L620,300 L580,200 Z"/>
+                    <!-- 非洲 -->
+                    <path class="continent" data-name="非洲" d="M420,180 L520,170 L540,340 L460,410 L380,340 L400,200 Z"/>
+                    <!-- 欧洲 -->
+                    <path class="continent" data-name="欧洲" d="M440,100 L560,90 L540,170 L430,180 L410,120 Z"/>
+                    <!-- 北美洲 -->
+                    <path class="continent" data-name="北美洲" d="M80,100 L240,80 L260,220 L180,300 L60,240 Z"/>
+                    <!-- 南美洲 -->
+                    <path class="continent" data-name="南美洲" d="M140,300 L220,280 L240,400 L180,440 L100,380 Z"/>
+                    <!-- 大洋洲 -->
+                    <path class="continent" data-name="大洋洲" d="M740,360 L820,350 L830,410 L750,430 L720,390 Z"/>
+                    <!-- 南极洲 -->
+                    <path class="continent" data-name="南极洲" d="M20,430 L980,430 L980,445 L20,445 Z"/>
+                </svg>
+                <div class="map-popup" id="mapPopup">
+                    <h3 id="popTitle"></h3>
+                    <div id="popContent"></div>
+                    <div class="close-pop" onclick="hidePopup()">关闭</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 资源库页面 ========== -->
+    <div id="resourceLib" class="page hidden">
+        <div class="card">
+            <h2>📚地理教学资源库</h2>
+            <p class="tip">分类：卫星遥感图、地形剖面图、实景图片、地理短视频，点击资源预览</p>
+            <div class="resource-tab">
+                <button class="active" onclick="switchResource('all',this)">全部</button>
+                <button onclick="switchResource('image',this)">图片素材</button>
+                <button onclick="switchResource('video',this)">教学短视频</button>
+            </div>
+            <div class="resource-grid" id="resourceGrid">
+                <!-- 资源列表，在这里新增/修改资源 -->
+            </div>
+        </div>
     </div>
 
     <!-- 知识点板块 -->
-    <div id="knowledge" class="page">
+    <div id="knowledge" class="page hidden">
         <div class="card">
             <h2>世界地理核心章节</h2>
             <div class="tip">大洲大洋、板块运动、世界气候、洋流、人文地理、区域发展</div>
@@ -423,24 +157,11 @@ btnTheme.onclick = ()=>{
         </div>
     </div>
 
-    <!-- ✅新增：4点扩展升级建议页面 -->
-    <div id="extend" class="page hidden">
-        <div class="card">
-            <h2>项目扩展升级建议（4项）</h2>
-            <ol style="padding-left:22px;line-height:1.8;">
-                <li><strong>交互式矢量世界地图模块升级</strong>
-                    <p>增加可点击矢量世界地图，点击大洲/国家弹出对应地理知识点卡片（地形、气候、人文、重难点）；增加缩放、拖拽功能；配套高亮图层（气候带、洋流、板块边界），教师一键切换图层，课堂直观演示区域地理特征。</p>
-                </li>
-                <li><strong>随堂测评与学情统计功能</strong>
-                    <p>拓展题型：单选、多选、填空、识图题；提交后即时判分+解析；本地存储答题数据，自动生成学情统计，统计正确率、高频错题，教师可导出错题清单，针对性辅导。</p>
-                </li>
-                <li><strong>知识点分层与学习路径功能</strong>
-                    <p>知识点分层：基础识记、重难点、拓展探究；区分教师授课模式/学生自学模式。设置学习任务清单，标记已掌握/未掌握知识点，支持收藏重点，生成个人笔记。</p>
-                </li>
-                <li><strong>多终端适配与资源库扩展</strong>
-                    <p>适配电脑、平板，支持教室投屏；新增内嵌资源库，可嵌入地理短视频、卫星遥感图、地形剖面图；增加浅色/暗黑双主题，适配投影环境。</p>
-                </li>
-            </ol>
+    <!-- 资源预览弹窗 -->
+    <div class="resource-preview" id="resourcePreview">
+        <div class="preview-box">
+            <div id="previewContent"></div>
+            <button class="close-preview" onclick="closeResourcePreview()">关闭预览</button>
         </div>
     </div>
 
@@ -448,10 +169,146 @@ btnTheme.onclick = ()=>{
 </div>
 
 <script>
+//页面切换
 function switchPage(id){
     document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
+    hidePopup();
 }
+
+// ===================== 大洲知识点数据【重点！这里预留图片/视频通道】 =====================
+const continentData = {
+    "亚洲":`<p><b>地形：</b>中部高四周低，高原山地为主。</p>
+            <p><b>气候：</b>气候复杂多样，季风气候显著，大陆性分布广。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/30201003009b40489212421220403311~tplv-a9rns2rl98-image.image" alt="亚洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=1052076332&bvid=BV1hH4y1p78V&cid=1481907965&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>人口最多大洲；东亚、东南亚、南亚人口稠密。</p>
+            <p><b>重难点：</b>亚欧大陆季风成因、青藏高原影响。</p>`,
+    "非洲":`<p><b>地形：</b>高原大陆，东南高西北低。</p>
+            <p><b>气候：</b>以赤道为轴，南北对称分布，热带面积最大。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/90220200384440089044242130040760~tplv-a9rns2rl98-image.image" alt="非洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=117331359439588&bvid=BV1GWh26wEjL&cid=42192602126&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>黑色人种主要分布区，经济多为发展中国家。</p>
+            <p><b>重难点：</b>撒哈拉沙漠、刚果盆地、东非大裂谷。</p>`,
+    "欧洲":`<p><b>地形：</b>平原为主，平均海拔最低大洲。</p>
+            <p><b>气候：</b>温带海洋性气候典型，全年温和湿润。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/24412004447440488221224413008101~tplv-a9rns2rl98-image.image" alt="欧洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=784552316&bvid=BV1G14y1Q7Mo&cid=1156009857&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>发达国家集中，人口自然增长率低。</p>
+            <p><b>重难点：</b>温带海洋性气候成因。</p>`,
+    "北美洲":`<p><b>地形：</b>三大地形区，西山地、中平原、东低山高原。</p>
+            <p><b>气候：</b>温带大陆性气候为主。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/32112004474440488012224413008201~tplv-a9rns2rl98-image.image" alt="北美洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=88785665&bvid=BV1P7411G72r&cid=151671081&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>移民大陆，美国、加拿大为发达国家。</p>
+            <p><b>重难点：</b>地形对气候的阻挡作用。</p>`,
+    "南美洲":`<p><b>地形：</b>西安第斯山脉，东平原高原相间分布。</p>
+            <p><b>气候：</b>热带雨林气候面积最大。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/12312004447440488012224413008301~tplv-a9rns2rl98-image.image" alt="南美洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=99900862&bvid=BV1G7411Q7A6&cid=170466062&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>混血人种多，巴西为代表国家。</p>
+            <p><b>重难点：</b>亚马孙雨林生态意义。</p>`,
+    "大洋洲":`<p><b>地形：</b>澳大利亚东西高中部低。</p>
+            <p><b>气候：</b>半环状分布，中部热带沙漠广布。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/42312004447440488012224413008401~tplv-a9rns2rl98-image.image" alt="大洋洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=117331426676868&bvid=BV1yrh26SEN7&cid=42192997133&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>地广人稀，澳大利亚发达国家。</p>
+            <p><b>重难点：</b>澳大利亚特有生物成因。</p>`,
+    "南极洲":`<p><b>地形：</b>冰雪高原，平均海拔最高大洲。</p>
+            <p><b>气候：</b>酷寒、干燥、烈风。</p>
+            <img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/52312004447440488012224413008501~tplv-a9rns2rl98-image.image" alt="南极洲地形图">
+            <iframe width="100%" height="220" src="<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=867178608&bvid=BV1zV4y1f7Nx&cid=1088664255&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>" frameborder="0" allowfullscreen></iframe>
+            <p><b>人文：</b>无常住人口，科学考察站。</p>
+            <p><b>重难点：</b>南极环境保护、极地科考。</p>`
+};
+
+
+//地图弹窗
+const popup = document.getElementById('mapPopup');
+const popTitle = document.getElementById('popTitle');
+const popContent = document.getElementById('popContent');
+const svgWrap = document.querySelector('#worldMapSvg').parentElement;
+document.querySelectorAll('.continent').forEach(ele=>{
+    ele.addEventListener('click',function(e){
+        const name = this.dataset.name;
+        popTitle.innerText = name;
+        popContent.innerHTML = continentData[name];
+        const x = e.pageX - svgWrap.getBoundingClientRect().left;
+        const y = e.pageY - svgWrap.getBoundingClientRect().top;
+        popup.style.left = (x + 15)+'px';
+        popup.style.top = (y + 15)+'px';
+        popup.style.display = 'block';
+    })
+})
+function hidePopup(){
+    popup.style.display = 'none';
+}
+
+// ====================== 资源库JS代码 ======================
+// 资源数据，在这里新增资源
+const resourceList = [
+    {
+        title:"世界地形卫星图",
+        type:"image",
+        desc:"全球海陆地形遥感影像",
+        url:"https://img0.baidu.com/it/u=382603122,1300421011&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=400"
+    },
+    {
+        title:"亚欧大陆地形剖面图",
+        type:"image",
+        desc:"沿30°N亚洲地形剖面",
+        url:"https://img1.baidu.com/it/u=1260351130,2680311042&fm=253&fmt=auto&app=120&f=JPEG?w=700&h=350"
+    },
+    {
+        title:"板块运动科普短视频",
+        type:"video",
+        desc:"板块构造学说动画演示",
+        url:"https://www.bilibili.com/embed/xxxxxx"
+    }
+];
+
+let currentFilter = "all";
+//渲染资源列表
+function renderResource(){
+    const grid = document.getElementById("resourceGrid");
+    grid.innerHTML = "";
+    const filterData = currentFilter === "all" ? resourceList : resourceList.filter(r=>r.type === currentFilter);
+    filterData.forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "resource-item";
+        div.innerHTML = `
+            <h4>${item.title}</h4>
+            <p>${item.desc}</p>
+            <small>${item.type==="image"?"图片素材":"短视频"}</small>
+        `;
+        div.onclick = ()=>openResourcePreview(item);
+        grid.appendChild(div);
+    })
+}
+//切换资源分类标签
+function switchResource(type,btnDom){
+    currentFilter = type;
+    document.querySelectorAll(".resource-tab button").forEach(b=>b.classList.remove("active"));
+    btnDom.classList.add("active");
+    renderResource();
+}
+//打开预览弹窗
+function openResourcePreview(item){
+    const preview = document.getElementById("resourcePreview");
+    const content = document.getElementById("previewContent");
+    if(item.type === "image"){
+        content.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p><img src="${item.url}" alt="${item.title}">`;
+    }else if(item.type === "video"){
+        content.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p><iframe src="${item.url}" width="720" height="400" frameborder="0" allowfullscreen></iframe>`;
+    }
+    preview.style.display = "flex";
+}
+function closeResourcePreview(){
+    document.getElementById("resourcePreview").style.display = "none";
+}
+//初始化加载资源库
+renderResource();
 </script>
 </body>
 </html>
+
